@@ -5,6 +5,8 @@ import SearchBox from './components/search-box/search-box.component';
 
 interface Monster {
   name: string;
+  id: number;
+  email: string;
 }
 
 interface AppState {
@@ -13,8 +15,8 @@ interface AppState {
 }
 
 class App extends Component<{}, AppState> {
-  constructor(props: {}) {
-    super(props);
+  constructor( props: {} ) {
+    super( props );
 
     this.state = {
       monsters: [],
@@ -23,23 +25,28 @@ class App extends Component<{}, AppState> {
   }
 
   componentDidMount(): void {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then((response) => response.json())
-      .then((users) => {
-        this.setState({ monsters: users });
-      })
-      .catch((error) => console.error('Error fetching users:', error));
+    fetch( 'https://jsonplaceholder.typicode.com/users' )
+      .then( ( response ) => response.json() )
+      .then( ( users ) => {
+        const monsters = users.map( ( user: any ) => ( {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        } ) );
+        this.setState( { monsters } );
+      } )
+      .catch( ( error ) => console.error( 'Error fetching users:', error ) );
   }
 
-  onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  onSearchChange = ( event: React.ChangeEvent<HTMLInputElement> ) => {
     const searchField = event.target.value.toLowerCase();
-    this.setState({ searchField });
+    this.setState( { searchField } );
   }
 
   render() {
     const { monsters, searchField } = this.state;
-    const filteredMonsters = monsters.filter((monster) =>
-      monster.name.toLowerCase().includes(searchField)
+    const filteredMonsters = monsters.filter( ( monster ) =>
+      monster.name.toLowerCase().includes( searchField )
     );
 
     return (
@@ -51,7 +58,6 @@ class App extends Component<{}, AppState> {
           onChangeHandler={this.onSearchChange}
         />
         <CardList monsters={filteredMonsters} />
-        <button>Update</button>
       </div>
     );
   }

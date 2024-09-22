@@ -1,4 +1,5 @@
 import React, { Component, ReactNode } from "react";
+import "./search-box.style.css";
 
 interface SearchBoxProps {
   type: string;
